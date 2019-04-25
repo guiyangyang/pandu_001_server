@@ -40,17 +40,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 app.use(function (req, res, next) {
-  console.log('req.url')
-  console.log(req.url)
+  // console.log('req.url')
+  // console.log(req.url)
   // 我这里知识把登陆和注册请求去掉了，其他的多有请求都需要进行token校验 
   if (req.url.indexOf('/users/login') == '-1' && req.url.indexOf('/users/register') == '-1' && req.url.indexOf('/users/logout') == '-1' ) {
     // if (req.url != '/user/login' && req.url != '/user/register') {
       let token = req.headers.authorization;
       
-      console.log('req.headers')
-      console.log(req.headers)
-      console.log('token-authorization')
-      console.log(token)
+      // console.log('req.headers')
+      // console.log(req.headers)
+      // console.log('token-authorization')
+      // console.log(token)
       
       let secretOrPrivateKey="suiyi";
       jwt.verify(token, secretOrPrivateKey, function (err, decode) {
