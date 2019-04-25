@@ -64,8 +64,8 @@ app.use(function (req, res, next) {
               }
             })         
         } else {
-          console.log('decode')
-          console.log(decode)
+          // console.log('decode')
+          // console.log(decode)
             // res.send({'status':1});
             next()
         }

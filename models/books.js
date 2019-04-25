@@ -19,5 +19,6 @@ var bookSchema = new Schema({
     updatetime:String,//更新时间
     deletetime:String,//删除时间
 });
+// bookSchema.index({'uploadtime':-1});//上传时间  倒序
 
 module.exports = mongoose.model('Book',bookSchema);
