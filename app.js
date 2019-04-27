@@ -39,43 +39,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(allowCors);//使用跨域中间件
 
 
-app.use(function (req, res, next) {
-  // console.log('req.url')
-  // console.log(req.url)
-  // 我这里知识把登陆和注册请求去掉了，其他的多有请求都需要进行token校验 
-  if (req.url.indexOf('/users/login') == '-1' && req.url.indexOf('/users/register') == '-1' && req.url.indexOf('/users/logout') == '-1' ) {
-    // if (req.url != '/user/login' && req.url != '/user/register') {
-      let token = req.headers.authorization;
-      
-      // console.log('req.headers')
-      // console.log(req.headers)
-      // console.log('token-authorization')
-      // console.log(token)
-      
-      let secretOrPrivateKey="suiyi";
-      jwt.verify(token, secretOrPrivateKey, function (err, decode) {
-        if (err) {  //  时间失效的时候/ 伪造的token          
-            // res.send({'status':0});   
-            res.json({
-              status:'500014',
-              msg:'token过期',
-              result:{
-                err:err
-              }
-            })         
-        } else {
-          // console.log('decode')
-          // console.log(decode)
-            // res.send({'status':1});
-            next()
-        }
-    })
-
-
-  } else {
-      next();
-  }
-});
+// app.use(function (req, res, next) {
+//   // 我这里知识把登陆和注册请求去掉了，其他的多有请求都需要进行token校验 
+//   if (req.url.indexOf('/users/login') == '-1' && req.url.indexOf('/users/register') == '-1' && req.url.indexOf('/users/logout') == '-1' ) {
+//       let token = req.headers.authorization;
+//       let secretOrPrivateKey="suiyi";
+//       jwt.verify(token, secretOrPrivateKey, function (err, decode) {
+//         if (err) {  //  时间失效的时候/ 伪造的token  
+//             res.json({
+//               status:'500014',
+//               msg:'token过期',
+//               result:{
+//                 err:err
+//               }
+//             })         
+//         } else {
+//             next()
+//         }
+//     })
+//   } else {
+//       next();
+//   }
+// });
 
 
 
