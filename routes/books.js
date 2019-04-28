@@ -56,8 +56,8 @@ router.post('/getLiterature',function (req,res,next) {
   })
 
   // 最新分享 
-  router.post('/getLatestShare',function(req,res,next){
-      let size = req.body.size;
+router.post('/getLatestShare',function(req,res,next){
+      let size = req.body.size || 6;
       Book.find({}).sort({'uploadtime':-1}).limit(size).exec((err,docs) => {
         if(err){
             res.json({
@@ -71,7 +71,7 @@ router.post('/getLiterature',function (req,res,next) {
                     status:'200000',
                     msg:'请求成功',
                     result:{
-                        docs:docs
+                        data:docs
                     }
                 })
             }else{
@@ -84,6 +84,63 @@ router.post('/getLiterature',function (req,res,next) {
       })
     
   })
+// 分享 次数
+router.post('/addShareNum',function(req,res,next) {
+    let id = req.body.id;
+    Book.findOne({'id':id},(err,doc) => {
+        if(err){
+            res.json({
+                status:'500001',
+                msg:'数据操作错误'
+            })
+        }else{
+            doc.sharenum++;           
+            doc.save((err,docs)=>{
+                if(err){
+                    res.json({
+                        status:'500001',
+                        msg:'数据操作错误'
+                    })
+                }else{
+                    res.json({
+                        status:'200000',
+                        msg:'分享数增加'
+                    })
+                }
+            })
+            
 
+        }
+     
+    })
+})
+// 分享排行
+router.post('/shareRank',function (req,res,next) {
+    let size = req.body.size || 6;
+    Book.find({}).sort({'sharenum':-1}).limit(size).exec((err,docs) => {
+        if(err){
+            res.json({
+                status:'500001',
+                msg:'数据操作错误'
+            })
+        }else{
+                
+            if(docs.length > 0){
+                res.json({
+                    status:'200000',
+                    msg:'请求成功',
+                    result:{
+                        data:docs
+                    }
+                })
+            }else{
+                res.json({
+                    status:'200004',
+                    msg:'暂无数据',
+                })
+            }  
+        }
+    })
+  })
 
   module.exports = router;

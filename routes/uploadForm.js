@@ -12,6 +12,7 @@ router.post('/',function(req,res,next){
     console.log(req.body);
     let dataInfo = reqData;
     dataInfo.id = reqData.type[0]+'_'+reqData.type[1]+'_'+getRandomCharacter(4);
+    dataInfo.sharenum = '0';
     dataInfo.uploadtime = Date.now();
     delete dataInfo.pwdRadio
     console.log('dataInfo')
