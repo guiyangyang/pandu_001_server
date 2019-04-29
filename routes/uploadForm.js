@@ -3,10 +3,7 @@ var router = express.Router();
 var Book = require('./../models/books');
 var Video = require('./../models/videos');
 var jwt = require('jsonwebtoken');
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+var fs = require('fs');
 router.post('/',function(req,res,next){
     let reqData = req.body;
     console.log(req.body);
@@ -54,6 +51,29 @@ router.post('/',function(req,res,next){
       })
     }
     
+})
+
+//上传图片
+router.post('/upImg',function(req,res,next){
+  let path = 'public/images/bookImgs/' + Date.now() + '.jpg';
+  let img = req.body.img;
+  let img64 = img.replace(/^data:image\/\w+;base64,/,'');
+  let dataBuffer = new Buffer(img64,'base64');
+  fs.writeFile(path,dataBuffer,function(err){
+    if(err){
+      console.log(err)
+    }else{
+      console.log('写入成功!')
+      res.json({
+        status:'200000',
+        msg:'图片上传成功',
+        result:{
+          data:path
+        }
+      })
+    }
+  })
+  
 })
 
 
