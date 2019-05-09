@@ -46,13 +46,8 @@ router.get('/', function(req, res, next) {
 
 //登出 接口
 router.post('/logout',function(req,res,next){
-  // res.cookie('userId','',{
-  //   path:'/',
-  //   maxAge:-1
-  // })
+  
   let token = req.body.token;
-  console.log('logout token ')
-  console.log(token)
   User.update({token:token}, {token:''}, function(err,doc){
      if(err){
        res.json({
@@ -75,8 +70,6 @@ router.post('/login', (req,res,next) => {
 
   let userphone = req.body.userphone;
   let password = req.body.password;
-  console.log(req.body.userphone)
-  console.log(req.body.password)
 
 
   User.find({userphone:userphone}, (err,docs) => {
@@ -87,8 +80,6 @@ router.post('/login', (req,res,next) => {
       })
       return 
     }
-    console.log('docs')
-    console.log(docs)
     if(docs.length>0){
       if(docs[0].password !== password){
         res.json({
@@ -121,7 +112,8 @@ router.post('/login', (req,res,next) => {
               token:token,
               userphone:docs[0].userphone,
               userid:docs[0].userid,
-              msg:docs[0]
+              username:docs[0].username,
+              email:docs[0].email
 
             }
           })
@@ -144,8 +136,7 @@ router.post('/register', (req, res, next) => {
   let password = req.body.password
 
   User.find({userphone:userphone},(err,docs) => {
-    // console.log('docs')
-    // console.log(docs)
+  
     if(err){
       res.json({
         status:'500001',
@@ -172,20 +163,12 @@ router.post('/register', (req, res, next) => {
         password:password,
         userphone:userphone,
         token:token,
-        regtime:regtime
+        regtime:regtime,
+        email:''
       }
-      // let regUser = new User({
-      //   username:'',
-      //   userid:createUserId(16),
-      //   password:password,
-      //   userphone:userphone,
-      //   token:token,
-      //   regtime:regtime
-      // },false)
+     
       User.insertMany(userInfo,function(err,doc){
-        // regUser.save(function(err,doc){
-        // console.log('doc')
-        // console.log(doc)
+      
         if(err){
           res.json({
             status:'500001',
@@ -198,39 +181,75 @@ router.post('/register', (req, res, next) => {
             result:{
               token:userInfo.token,
               userphone:userInfo.userphone,
-              userId:userInfo.userid
+              userId:userInfo.userid,
+              username:userInfo.username,
+              email:userInfo.email
             }
           })
         }
       })
-      // User.save();
-      // docs.push(userInfo)
-      // User(docs[0]).save((err) => {
-      //   if(err){
-      //     res.json({
-      //       status:'500001',
-      //       msg:'数据操作错误'
-      //     })
-      //   }else{
-      //     res.json({
-      //       status:'200000',
-      //       msg:'',
-      //       result:{
-      //         token:token,
-      //         userphone:docs[0].userphone,
-      //         userid:docs[0].userid,
-      //         msg:docs[0]
-
-      //       }
-      //     })
-      //   }
-      // })
-
     }
-
   })
 
 })
+
+//修改个人资料
+router.post('/modify',(req,res,next) => {
+  let userphone = req.body.userphone;
+  let username = req.body.username;
+  let email = req.body.email;
+  let password = req.body.password;
+
+  // User.update({'userphone':userphone},[{$set:{'username':username}},{$set:{'email':email}},{$set:{'password':password}}])
+  // User.update({'userphone':userphone},{'username':username,'email':email,'password':password},{multi:true},function(err,doc){
+  //   if(err){
+  //         res.json({
+  //           status:'500001',
+  //           msg:'数据操作错误'
+  //         })
+  //       }else{
+  //         console.log('doc')
+  //         console.log(doc)
+  //         res.json({
+  //                 status:'200000',
+  //                   msg:'修改成功',
+  //                   result:doc
+  //               })
+  //       }
+  // })
+
+  User.findOne({'userphone':userphone},(err,doc) => {
+    if(err){
+      res.json({
+        status:'500001',
+        msg:'数据操作错误'
+      })
+    }else{
+      if(username){
+        doc.username = username;
+      }
+      if(email){
+        doc.email = email;
+      }
+      doc.password = password;
+      doc.save((err,docs) =>{
+        if(err){
+          res.json({
+            status:'500001',
+            msg:'数据操作错误'
+          })
+        }else{
+          res.json({
+            status:'200000',
+              msg:'修改成功'
+          })
+        }
+      })
+    }
+  })
+})
+
+
 //生成 userid
 function createUserId(randomLength){
   return Number(Math.random().toString().substr(3,randomLength) + Date.now()).toString(36)

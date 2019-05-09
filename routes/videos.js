@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var Book = require('./../models/books');
+var Video = require('./../models/videos');
 
 //文学历史
 // router.post('/getLiterature',function (req,res,next) {
@@ -13,9 +13,9 @@ var Book = require('./../models/books');
     
 //     let literature = null;
 //     if(searchContent){
-//          literature = Book.find({type:['books', 'literature'],"title": new RegExp(searchContent,'i')});
+//          literature = Video.find({type:['videos', 'literature'],"title": new RegExp(searchContent,'i')});
 //     }else{
-//          literature = Book.find({type:['books', 'literature']});
+//          literature = Video.find({type:['videos', 'literature']});
 //     }
 //     literature.exec((err,doc) => {
 //         if(err){
@@ -52,8 +52,8 @@ var Book = require('./../models/books');
 //         }
 //     })
 //   })
-  //各类书籍  列表 
-router.post('/getBooks',function (req,res,next) {
+  //各类视频  列表 
+router.post('/getVideos',function (req,res,next) {
     let pagenum = req.body.pagenum;
     let pagesize = req.body.pagesize;
     let searchType = req.body.searchType;
@@ -64,35 +64,35 @@ router.post('/getBooks',function (req,res,next) {
     console.log(searchType)
     let findType = [];
     switch(searchType){
-        case 'literature':  //文学历史
-          findType = ['books', 'literature']
+        case 'movies':  //文学历史
+          findType = ['videos', 'movies']
           break;
-        case 'novel':       //小说传记
-          findType = ['books', 'novel']
+        case 'teleplay':       //小说传记
+          findType = ['videos', 'teleplay']
           break;
-        case 'technology':   //科技时尚
-          findType = ['books', 'technology']
+        case 'ITvideo':   //科技时尚
+          findType = ['videos', 'ITvideo']
           break;
-        case 'education':   //教育这薰
-          findType = ['books', 'education']
+        case 'interest':   //教育这薰
+          findType = ['videos', 'interest']
           break;
         case 'others':       //其他
-          findType = ['books', 'others']
+          findType = ['videos', 'others']
           break;
         default :
-          findType = ['books', 'literature']
+          findType = ['videos', 'movies']
 
     }
     console.log('findType')
     console.log(findType)
 
-    let books = null;
+    let videos = null;
     if(searchContent){
-        books = Book.find({'type':findType,"title": new RegExp(searchContent,'i')});
+        videos = Video.find({'type':findType,"title": new RegExp(searchContent,'i')});
     }else{
-        books = Book.find({'type':findType});
+        videos = Video.find({'type':findType});
     }
-    books.exec((err,doc) => {
+    videos.exec((err,doc) => {
         if(err){
             res.json({
                 status:'500001',
@@ -100,7 +100,7 @@ router.post('/getBooks',function (req,res,next) {
             })
         }else{
            total = doc.length;
-           books.sort({'uploadtime':-1}).skip(skip).limit(pagesize).exec((err,docs) => {
+           videos.sort({'uploadtime':-1}).skip(skip).limit(pagesize).exec((err,docs) => {
             if(err){
                 res.json({
                     status:'500001',
@@ -131,7 +131,7 @@ router.post('/getBooks',function (req,res,next) {
   // 最新分享 
 router.post('/getLatestShare',function(req,res,next){
       let size = req.body.size || 6;
-      Book.find({}).sort({'uploadtime':-1}).limit(size).exec((err,docs) => {
+      Video.find({}).sort({'uploadtime':-1}).limit(size).exec((err,docs) => {
         if(err){
             res.json({
                 status:'500001',
@@ -160,7 +160,7 @@ router.post('/getLatestShare',function(req,res,next){
 // 分享 次数
 router.post('/addShareNum',function(req,res,next) {
     let id = req.body.id;
-    Book.findOne({'id':id},(err,doc) => {
+    Video.findOne({'id':id},(err,doc) => {
         if(err){
             res.json({
                 status:'500001',
@@ -187,7 +187,7 @@ router.post('/addShareNum',function(req,res,next) {
 // 分享排行
 router.post('/shareRank',function (req,res,next) {
     let size = req.body.size || 6;
-    Book.find({}).sort({'sharenum':-1}).limit(size).exec((err,docs) => {
+    Video.find({}).sort({'sharenum':-1}).limit(size).exec((err,docs) => {
         if(err){
             res.json({
                 status:'500001',

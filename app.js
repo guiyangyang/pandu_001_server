@@ -8,9 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var goods = require('./routes/goods');
 var uploadForm = require('./routes/uploadForm')
-// var books = require('./routes/books/books');
 var books = require('./routes/books');
-// var books = require('./routes/books');
+var videos = require('./routes/videos');
 var jwt = require('jsonwebtoken');
 var ejs = require('ejs')
 var app = express();
@@ -83,6 +82,7 @@ app.use('/users', usersRouter);
 app.use('/goods',goods);
 app.use('/uploadForm',uploadForm);
 app.use('/books',books);
+app.use('/videos',videos);
 
 
 // catch 404 and forward to error handler
