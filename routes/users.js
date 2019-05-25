@@ -7,43 +7,6 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
-// router.post('/login',function(req,res,next){
-//   var param = {
-//     userphone:req.body.userphone,
-//     password:req.body.password
-//   }
-//   console.log('param.userphone')
-//   console.log(param.userphone)
-//   User.find(param,function(err,doc){
-//     if(err){
-//       res.json({
-//         status:'500001',
-//         msg:'数据操作错误',
-//       }) 
-//     }else{
-//       if(doc){
-        
-//         console.log('cookie')
-//         // console.log(doc[0].userid)
-//         console.log(doc[0])
-//         // res.cookie('userId',doc[0].userid,{
-//         //   path:'/',
-//         //   maxAge:1000*60*60
-//         // });
-    
-//         res.json({
-//           status:'200000',
-//           msg:'',
-//           result:{
-//             data:doc[0]
-//           }
-//         })
-//       }
-      
-//     }
-//   })
-// })
-
 //登出 接口
 router.post('/logout',function(req,res,next){
   
@@ -68,11 +31,11 @@ router.post('/logout',function(req,res,next){
 // token 登录
 router.post('/login', (req,res,next) => {
 
-  let userphone = req.body.userphone;
+  let username = req.body.username;
   let password = req.body.password;
 
 
-  User.find({userphone:userphone}, (err,docs) => {
+  User.find({username:username}, (err,docs) => {
     if(err){
       res.json({
         status:'500001',
@@ -90,7 +53,7 @@ router.post('/login', (req,res,next) => {
       }
 
 
-      let content = {userphone:userphone};
+      let content = {username:username};
       let secretkey = 'suiyi';
       let token = jwt.sign(content, secretkey, {
         expiresIn:60*60*1
@@ -132,10 +95,10 @@ router.post('/login', (req,res,next) => {
 
 //注册
 router.post('/register', (req, res, next) => {
-  let userphone = req.body.userphone
+  let username = req.body.username
   let password = req.body.password
 
-  User.find({userphone:userphone},(err,docs) => {
+  User.find({username:username},(err,docs) => {
   
     if(err){
       res.json({
@@ -151,17 +114,17 @@ router.post('/register', (req, res, next) => {
        })
     }else {
 
-      let content = {userphone:userphone};
+      let content = {username:username};
       let secretkey = 'suiyi';
       let token = jwt.sign(content, secretkey, {
         expiresIn:60*60*1
       })
       let regtime = new Date().getTime()
       let userInfo = {
-        username:'',
+        userphone:'',
         userid:createUserId(16),
         password:password,
-        userphone:userphone,
+        username:username,
         token:token,
         regtime:regtime,
         email:''
@@ -200,33 +163,18 @@ router.post('/modify',(req,res,next) => {
   let email = req.body.email;
   let password = req.body.password;
 
-  // User.update({'userphone':userphone},[{$set:{'username':username}},{$set:{'email':email}},{$set:{'password':password}}])
-  // User.update({'userphone':userphone},{'username':username,'email':email,'password':password},{multi:true},function(err,doc){
-  //   if(err){
-  //         res.json({
-  //           status:'500001',
-  //           msg:'数据操作错误'
-  //         })
-  //       }else{
-  //         console.log('doc')
-  //         console.log(doc)
-  //         res.json({
-  //                 status:'200000',
-  //                   msg:'修改成功',
-  //                   result:doc
-  //               })
-  //       }
-  // })
-
-  User.findOne({'userphone':userphone},(err,doc) => {
+  User.findOne({'username':username},(err,doc) => {
     if(err){
       res.json({
         status:'500001',
         msg:'数据操作错误'
       })
     }else{
-      if(username){
-        doc.username = username;
+      // if(username){
+      //   doc.username = username;
+      // }
+      if(userphone){
+        doc.userphone = userphone;
       }
       if(email){
         doc.email = email;

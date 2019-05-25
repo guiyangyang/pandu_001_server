@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Goods = require('../models/goods');
 //连接数据库 用户名 密码
+// mongoose.connect('mongodb://127.0.0.1:19999/diskone')
 mongoose.connect('mongodb://127.0.0.1:27017/diskone')
 // mongoose.connect('mongodb://root:123456@127.0.0.1:27017/dumall')
 

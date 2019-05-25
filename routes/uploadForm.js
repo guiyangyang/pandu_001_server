@@ -5,7 +5,7 @@ var Video = require('./../models/videos');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
 
-var baseUrl = 'http://127.0.0.1:3000/';
+var baseUrl = 'http://127.0.0.1:3001/';
 
 router.post('/',function(req,res,next){
     let reqData = req.body;
