@@ -1,59 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var Book = require('./../models/books');
+var Epub = require('./../models/epubs');
 
-//文学历史
-// router.post('/getLiterature',function (req,res,next) {
-//     let pagenum = req.body.pagenum;
-//     let pagesize = req.body.pagesize;
-//     let searchType = req.body.type;
-//     let searchContent = req.body.searchContent;
-//     let skip = (pagenum - 1) * pagesize;
-//     let total = '';
-    
-//     let literature = null;
-//     if(searchContent){
-//          literature = Book.find({type:['books', 'literature'],"title": new RegExp(searchContent,'i')});
-//     }else{
-//          literature = Book.find({type:['books', 'literature']});
-//     }
-//     literature.exec((err,doc) => {
-//         if(err){
-//             res.json({
-//                 status:'500001',
-//                 msg:'数据操作错误'
-//             })
-//         }else{
-//            total = doc.length;
-//            literature.sort({'uploadtime':-1}).skip(skip).limit(pagesize).exec((err,docs) => {
-//             if(err){
-//                 res.json({
-//                     status:'500001',
-//                     msg:'数据操作错误'
-//                 })
-//             }else{
-//                 if(docs.length > 0){
-//                     res.json({
-//                         status:'200000',
-//                         msg:'请求成功',
-//                         result:{
-//                             docs:docs,
-//                             total:total
-//                         }
-//                     })
-//                 }else{
-//                     res.json({
-//                         status:'200004',
-//                         msg:'暂无数据',
-//                     })
-//                 } 
-//             }
-//         })
-//         }
-//     })
-//   })
-  //各类书籍  列表 
-router.post('/getBooks',function (req,res,next) {
+  //各类 epub 书籍  列表 
+router.post('/getEpubs',function (req,res,next) {
     let pagenum = req.body.pagenum;
     let pagesize = req.body.pagesize;
     let searchType = req.body.searchType;
@@ -63,32 +13,32 @@ router.post('/getBooks',function (req,res,next) {
     let findType = [];
     switch(searchType){
         case 'literature':  //文学历史
-          findType = ['books', 'literature']
+          findType = ['epubs', 'literature']
           break;
         case 'novel':       //小说传记
-          findType = ['books', 'novel']
+          findType = ['epubs', 'novel']
           break;
         case 'technology':   //科技时尚
-          findType = ['books', 'technology']
+          findType = ['epubs', 'technology']
           break;
         case 'education':   //教育这薰
-          findType = ['books', 'education']
+          findType = ['epubs', 'education']
           break;
         case 'others':       //其他
-          findType = ['books', 'others']
+          findType = ['epubs', 'others']
           break;
         default :
-          findType = ['books', 'literature']
+          findType = ['epubs', 'literature']
 
     }
 
-    let books = null;
+    let epubs = null;
     if(searchContent){
-        books = Book.find({'type':findType,"title": new RegExp(searchContent,'i')});
+        epubs = Epub.find({'type':findType,"title": new RegExp(searchContent,'i')});
     }else{
-        books = Book.find({'type':findType});
+        epubs = Epub.find({'type':findType});
     }
-    books.exec((err,doc) => {
+    epubs.exec((err,doc) => {
         if(err){
             res.json({
                 status:'500001',
@@ -96,7 +46,7 @@ router.post('/getBooks',function (req,res,next) {
             })
         }else{
            total = doc.length;
-           books.sort({'uploadtime':-1}).skip(skip).limit(pagesize).exec((err,docs) => {
+           epubs.sort({'uploadtime':-1}).skip(skip).limit(pagesize).exec((err,docs) => {
             if(err){
                 res.json({
                     status:'500001',
@@ -127,7 +77,7 @@ router.post('/getBooks',function (req,res,next) {
   // 最新分享 
 router.post('/getLatestShare',function(req,res,next){
       let size = req.body.size || 6;
-      Book.find({}).sort({'uploadtime':-1}).limit(size).exec((err,docs) => {
+      Epub.find({}).sort({'uploadtime':-1}).limit(size).exec((err,docs) => {
         if(err){
             res.json({
                 status:'500001',
@@ -156,7 +106,7 @@ router.post('/getLatestShare',function(req,res,next){
 // 分享 次数
 router.post('/addShareNum',function(req,res,next) {
     let id = req.body.id;
-    Book.findOne({'id':id},(err,doc) => {
+    Epub.findOne({'id':id},(err,doc) => {
         if(err){
             res.json({
                 status:'500001',
@@ -183,7 +133,7 @@ router.post('/addShareNum',function(req,res,next) {
 // 分享排行
 router.post('/shareRank',function (req,res,next) {
     let size = req.body.size || 6;
-    Book.find({}).sort({'sharenum':-1}).limit(size).exec((err,docs) => {
+    Epub.find({}).sort({'sharenum':-1}).limit(size).exec((err,docs) => {
         if(err){
             res.json({
                 status:'500001',

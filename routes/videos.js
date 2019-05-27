@@ -60,8 +60,6 @@ router.post('/getVideos',function (req,res,next) {
     let searchContent = req.body.searchContent;
     let skip = (pagenum - 1) * pagesize;
     let total = '';
-    console.log('searchType')
-    console.log(searchType)
     let findType = [];
     switch(searchType){
         case 'movies':  //文学历史
@@ -83,8 +81,6 @@ router.post('/getVideos',function (req,res,next) {
           findType = ['videos', 'movies']
 
     }
-    console.log('findType')
-    console.log(findType)
 
     let videos = null;
     if(searchContent){
