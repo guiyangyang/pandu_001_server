@@ -6,12 +6,13 @@ var Epub = require('./../models/epubs');
 var Epub = require('./../models/epubs');
 var jwt = require('jsonwebtoken');
 var fs = require('fs');
-var formidable = require('formidable')
-const querystring = require("querystring");
+// var formidable = require('formidable')
+// const querystring = require("querystring");
 
-var multiparty = require('multiparty');
+// var multiparty = require('multiparty');
 
-var baseUrl = 'http://127.0.0.1:3001/';
+// var baseUrl = 'http://127.0.0.1:3001/';
+var baseUrl = 'http://yuedu.1539.ink/';
 
 router.post('/',function(req,res,next){
     let reqData = req.body;

@@ -7,10 +7,10 @@ router.post('/getEpubs',function (req,res,next) {
     let pagenum = req.body.pagenum;
     let pagesize = req.body.pagesize;
     let searchType = req.body.searchType;
-    let searchContent = req.body.searchContent;
+    let searchContent = req.body.searchContent || '';
     let skip = (pagenum - 1) * pagesize;
     let total = '';
-    let findType = [];
+    let findType = null;
     switch(searchType){
         case 'literature':  //文学历史
           findType = ['epubs', 'literature']
@@ -28,13 +28,17 @@ router.post('/getEpubs',function (req,res,next) {
           findType = ['epubs', 'others']
           break;
         default :
-          findType = ['epubs', 'literature']
+          findType = 'all'
 
     }
 
     let epubs = null;
-    if(searchContent){
+    if(searchContent && (findType == 'all')){
+        epubs = Epub.find({"title": new RegExp(searchContent,'i')});
+    }else if(searchContent && (findType != 'all')){
         epubs = Epub.find({'type':findType,"title": new RegExp(searchContent,'i')});
+    }else if(searchContent == '' && (findType == 'all')){
+        epubs = Epub.find({});
     }else{
         epubs = Epub.find({'type':findType});
     }

@@ -60,7 +60,7 @@ router.post('/getBooks',function (req,res,next) {
     let searchContent = req.body.searchContent;
     let skip = (pagenum - 1) * pagesize;
     let total = '';
-    let findType = [];
+    let findType = null;
     switch(searchType){
         case 'literature':  //文学历史
           findType = ['books', 'literature']
@@ -78,13 +78,17 @@ router.post('/getBooks',function (req,res,next) {
           findType = ['books', 'others']
           break;
         default :
-          findType = ['books', 'literature']
+          findType = 'all'
 
     }
 
     let books = null;
-    if(searchContent){
+    if(searchContent && (findType == 'all')){
+        books = Book.find({"title": new RegExp(searchContent,'i')});
+    }else if(searchContent && (findType != 'all')){
         books = Book.find({'type':findType,"title": new RegExp(searchContent,'i')});
+    }else if(searchContent == '' && (findType == 'all')){
+        books = Book.find({});
     }else{
         books = Book.find({'type':findType});
     }

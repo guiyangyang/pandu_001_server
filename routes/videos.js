@@ -60,7 +60,7 @@ router.post('/getVideos',function (req,res,next) {
     let searchContent = req.body.searchContent;
     let skip = (pagenum - 1) * pagesize;
     let total = '';
-    let findType = [];
+    let findType = null;
     switch(searchType){
         case 'movies':  //文学历史
           findType = ['videos', 'movies']
@@ -78,13 +78,17 @@ router.post('/getVideos',function (req,res,next) {
           findType = ['videos', 'others']
           break;
         default :
-          findType = ['videos', 'movies']
+          findType = 'all'
 
     }
 
     let videos = null;
-    if(searchContent){
+    if(searchContent && (findType == 'all')){
+        videos = Video.find({"title": new RegExp(searchContent,'i')});
+    }else if(searchContent && (findType != 'all')){
         videos = Video.find({'type':findType,"title": new RegExp(searchContent,'i')});
+    }else if(searchContent == '' && (findType == 'all')){
+        videos = Video.find({});
     }else{
         videos = Video.find({'type':findType});
     }
